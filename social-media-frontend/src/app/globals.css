@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color: #2D3748;
+  --color1: #1A202C;
+  --color4: #4A5568;
+  --color5: #1890FF;
+  --color7: #666666;
+  --bg1: #F0F2F5;
+  --bg2: #FFFFFF;
+  --bg3: #F5F5F5;
+  --bg4: #DFDFDF;
+  --bcolor2: #F5F5F5;
+  --shadow1: 7.5px 20px 7.5px 20px rgba(108,126,147,0.15);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg1);
+  font-family: 'Poppins', sans-serif;
+  color: var(--color);
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #D9DEDD; border-radius: 10px; }
+
+a { text-decoration: none; }
+ul { list-style: none; padding: 0; margin: 0; }
+button, select { cursor: pointer; }
+button:focus, input:focus, select:focus, textarea:focus { outline: none; }
+img { display: block; }
+textarea { resize: none; }
+.form-control:focus { box-shadow: none; }
