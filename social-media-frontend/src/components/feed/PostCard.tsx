@@ -12,9 +12,10 @@ import LikersModal from "./LikersModal";
 interface PostCardProps {
   post: PostResponse;
   onPostUpdated?: (id: string, patch: Partial<PostResponse>) => void;
+  showPrivacyIcon?: boolean;
 }
 
-export default function PostCard({ post, onPostUpdated }: PostCardProps) {
+export default function PostCard({ post, onPostUpdated, showPrivacyIcon }: PostCardProps) {
   const [liked, setLiked] = useState(post.isLikedByMe);
   const [likeCount, setLikeCount] = useState(post.likeCount);
   const [commentCount] = useState(post.commentCount);
@@ -50,9 +51,16 @@ export default function PostCard({ post, onPostUpdated }: PostCardProps) {
               <h4 className="font-semibold text-sm" style={{ color: "var(--color1)" }}>
                 {post.authorName}
               </h4>
-              <p className="text-xs" style={{ color: "var(--color7)" }}>
+              <p className="text-xs flex items-center gap-1" style={{ color: "var(--color7)" }}>
                 {timeAgo(post.createdAt)} ·{" "}
-                <a href="#" style={{ color: "var(--color5)" }}>
+                <a href="#" className="flex items-center gap-1" style={{ color: "var(--color5)" }}>
+                  {showPrivacyIcon && isPrivate && (
+                    <svg width="11" height="13" fill="none" viewBox="0 0 11 13" aria-label="Private">
+                      <rect x="1" y="5.5" width="9" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.2" />
+                      <path d="M3 5.5V3.5a2.5 2.5 0 015 0v2" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+                      <circle cx="5.5" cy="9" r="1" fill="currentColor" />
+                    </svg>
+                  )}
                   {isPrivate ? "Private" : "Public"}
                 </a>
               </p>

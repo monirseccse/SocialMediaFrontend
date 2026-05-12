@@ -151,7 +151,7 @@ export default function FeedPage() {
     setLoading(true);
     setError("");
     try {
-      const res = await getFeed(reset ? undefined : cursorRef.current, 10);
+      const res = await getFeed(reset ? undefined : cursorRef.current);
       if (reset) {
         setPosts(res.data);
       } else {
