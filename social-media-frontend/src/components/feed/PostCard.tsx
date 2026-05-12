@@ -41,7 +41,6 @@ export default function PostCard({ post, onPostUpdated, showPrivacyIcon }: PostC
     <>
       <article
         className="bg-white rounded-[6px] mb-4 overflow-hidden"
-        style={{ boxShadow: "var(--shadow1)" }}
       >
         {/* Header */}
         <div className="px-6 pt-6 pb-4 flex items-start justify-between">
@@ -109,13 +108,13 @@ export default function PostCard({ post, onPostUpdated, showPrivacyIcon }: PostC
                 {/* Emoji reaction avatar stack */}
                 <div className="flex -space-x-1">
                   {liked ? (
-                    /* active smiley */
-                    <span className="w-[26px] h-[26px] rounded-full bg-yellow-400 flex items-center justify-center text-sm border-2 border-white">
-                      <svg width="16" height="16" fill="none" viewBox="0 0 19 19">
-                        <path fill="#FFCC4D" d="M9.5 19a9.5 9.5 0 100-19 9.5 9.5 0 000 19z" />
-                        <path fill="#664500" d="M9.5 11.083c-1.912 0-3.181-.222-4.75-.527-.358-.07-1.056 0-1.056 1.055 0 2.111 2.425 4.75 5.806 4.75 3.38 0 5.805-2.639 5.805-4.75 0-1.055-.697-1.125-1.055-1.055-1.57.305-2.838.527-4.75.527z" />
-                        <path fill="#fff" d="M4.75 11.611s1.583.528 4.75.528 4.75-.528 4.75-.528-1.056 2.111-4.75 2.111-4.75-2.11-4.75-2.11z" />
-                        <path fill="#664500" d="M6.333 8.972c.729 0 1.32-.827 1.32-1.847s-.591-1.847-1.32-1.847c-.729 0-1.32.827-1.32 1.847s.591 1.847 1.32 1.847zM12.667 8.972c.729 0 1.32-.827 1.32-1.847s-.591-1.847-1.32-1.847c-.729 0-1.32.827-1.32 1.847s.591 1.847 1.32 1.847z" />
+                    /* active thumbs up */
+                    <span
+                      className="w-[26px] h-[26px] rounded-full flex items-center justify-center border-2 border-white"
+                      style={{ background: "var(--color5)" }}
+                    >
+                      <svg width="14" height="14" fill="white" viewBox="0 0 24 24">
+                        <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z" />
                       </svg>
                     </span>
                   ) : (
@@ -123,8 +122,8 @@ export default function PostCard({ post, onPostUpdated, showPrivacyIcon }: PostC
                       className="w-[26px] h-[26px] rounded-full flex items-center justify-center border-2 border-white"
                       style={{ background: "var(--color5)" }}
                     >
-                      <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                      <svg width="14" height="14" fill="white" viewBox="0 0 24 24">
+                        <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z" />
                       </svg>
                     </span>
                   )}
@@ -158,24 +157,18 @@ export default function PostCard({ post, onPostUpdated, showPrivacyIcon }: PostC
             style={{ color: liked ? "var(--color5)" : "var(--color7)" }}
           >
             {liked ? (
-              /* active: emoji smiley */
+              /* active: filled thumbs up */
               <>
-                <svg width="19" height="19" fill="none" viewBox="0 0 19 19">
-                  <path fill="#FFCC4D" d="M9.5 19a9.5 9.5 0 100-19 9.5 9.5 0 000 19z" />
-                  <path fill="#664500" d="M9.5 11.083c-1.912 0-3.181-.222-4.75-.527-.358-.07-1.056 0-1.056 1.055 0 2.111 2.425 4.75 5.806 4.75 3.38 0 5.805-2.639 5.805-4.75 0-1.055-.697-1.125-1.055-1.055-1.57.305-2.838.527-4.75.527z" />
-                  <path fill="#fff" d="M4.75 11.611s1.583.528 4.75.528 4.75-.528 4.75-.528-1.056 2.111-4.75 2.111-4.75-2.11-4.75-2.11z" />
-                  <path fill="#664500" d="M6.333 8.972c.729 0 1.32-.827 1.32-1.847s-.591-1.847-1.32-1.847c-.729 0-1.32.827-1.32 1.847s.591 1.847 1.32 1.847zM12.667 8.972c.729 0 1.32-.827 1.32-1.847s-.591-1.847-1.32-1.847c-.729 0-1.32.827-1.32 1.847s.591 1.847 1.32 1.847z" />
+                <svg width="19" height="19" fill="none" viewBox="0 0 24 24">
+                  <path fill="var(--color5)" d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z" />
                 </svg>
-                Haha
+                Like
               </>
             ) : (
-              /* default: thumbs up / reaction */
+              /* default: outline thumbs up */
               <>
-                <svg width="19" height="19" fill="none" viewBox="0 0 19 19">
-                  <circle cx="9.5" cy="9.5" r="9" stroke="var(--color7)" strokeWidth="1" />
-                  <path stroke="var(--color7)" strokeLinecap="round" d="M6.5 11.5c0 0 1 1.5 3 1.5s3-1.5 3-1.5" />
-                  <circle cx="7" cy="8" r="1" fill="var(--color7)" />
-                  <circle cx="12" cy="8" r="1" fill="var(--color7)" />
+                <svg width="19" height="19" fill="none" viewBox="0 0 24 24">
+                  <path stroke="var(--color7)" strokeWidth="1.5" strokeLinejoin="round" strokeLinecap="round" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3" />
                 </svg>
                 Like
               </>
