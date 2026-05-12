@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import Avatar from "@/components/ui/Avatar";
 
@@ -109,6 +110,25 @@ export default function Navbar() {
                   </div>
                 </div>
                 <ul className="py-1">
+                  <li>
+                    <Link
+                      href="/profile"
+                      onClick={() => setDropOpen(false)}
+                      className="flex items-center justify-between px-4 py-2 text-sm hover:bg-gray-50 transition-colors"
+                      style={{ color: "var(--color1)" }}
+                    >
+                      <div className="flex items-center gap-2">
+                        <svg width="19" height="19" fill="none" viewBox="0 0 19 19">
+                          <circle cx="9.5" cy="6" r="3.5" stroke="#377DFF" strokeWidth="1.5" />
+                          <path stroke="#377DFF" strokeLinecap="round" strokeWidth="1.5" d="M2 17c0-3.314 3.358-6 7.5-6s7.5 2.686 7.5 6" />
+                        </svg>
+                        My Posts
+                      </div>
+                      <svg width="6" height="10" fill="none" viewBox="0 0 6 10">
+                        <path fill="var(--color1)" d="M5 5l.354.354L5.707 5l-.353-.354L5 5zM1.354 9.354l4-4-.708-.708-4 4 .708.708zm4-4.708l-4-4-.708.708 4 4 .708-.708z" opacity=".5" />
+                      </svg>
+                    </Link>
+                  </li>
                   <li>
                     <button
                       onClick={logout}

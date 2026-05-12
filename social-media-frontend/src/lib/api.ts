@@ -130,11 +130,21 @@ export async function apiLogin(data: LoginRequest): Promise<AuthResponse> {
 
 export async function getFeed(
   cursor?: string,
-  limit = 10
+  limit = 20
 ): Promise<CursorPagedResponse<PostResponse>> {
-  const params: Record<string, string | number> = { Limit: limit };
-  if (cursor) params.Cursor = cursor;
-  const res = await client.get<CursorPagedResponse<PostResponse>>("/api/Feed", { params });
+  const params: Record<string, string | number> = { limit };
+  if (cursor) params.cursor = cursor;
+  const res = await client.get<CursorPagedResponse<PostResponse>>("/api/feed", { params });
+  return res.data;
+}
+
+export async function getMyPosts(
+  cursor?: string,
+  limit = 20
+): Promise<CursorPagedResponse<PostResponse>> {
+  const params: Record<string, string | number> = { limit };
+  if (cursor) params.cursor = cursor;
+  const res = await client.get<CursorPagedResponse<PostResponse>>("/api/post", { params });
   return res.data;
 }
 
