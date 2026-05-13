@@ -50,6 +50,7 @@ export interface CommentResponse {
   authorName: string;
   content: string;
   likeCount: number;
+  replyCount: number;
   isLikedByMe: boolean;
   isReply: boolean;
   createdAt: string;

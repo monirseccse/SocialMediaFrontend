@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { CommentResponse, LikeTargetType } from "@/lib/types";
-import { toggleLike, addComment } from "@/lib/api";
+import { toggleLike, addComment, getCommentReplies } from "@/lib/api";
 import { timeAgo } from "@/lib/utils";
 import Avatar from "@/components/ui/Avatar";
 import LikersModal from "./LikersModal";
+
+const MAX_INDENT_DEPTH = 4;
 
 interface CommentItemProps {
   comment: CommentResponse;
@@ -21,6 +23,45 @@ export default function CommentItem({ comment, postId, onUpdated, depth = 0 }: C
   const [replyText, setReplyText] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [showLikers, setShowLikers] = useState(false);
+
+  const [localReplyCount, setLocalReplyCount] = useState(comment.replyCount ?? 0);
+  const [showReplies, setShowReplies] = useState(false);
+  const [replies, setReplies] = useState<CommentResponse[]>([]);
+  const [repliesCursor, setRepliesCursor] = useState<string | null>(null);
+  const [repliesHasMore, setRepliesHasMore] = useState(false);
+  const [loadingReplies, setLoadingReplies] = useState(false);
+  const [loadingMoreReplies, setLoadingMoreReplies] = useState(false);
+  const [repliesError, setRepliesError] = useState<string | null>(null);
+
+  async function fetchReplies(reset = false) {
+    if (reset) setLoadingReplies(true);
+    else setLoadingMoreReplies(true);
+    setRepliesError(null);
+
+    try {
+      const cursor = reset ? undefined : (repliesCursor ?? undefined);
+      const res = await getCommentReplies(comment.id, cursor, 10);
+      setReplies((prev) => (reset ? res.data : [...prev, ...res.data]));
+      setRepliesCursor(res.nextCursor);
+      setRepliesHasMore(res.hasNextPage);
+    } catch {
+      setRepliesError("Couldn't load replies, tap to retry");
+    } finally {
+      setLoadingReplies(false);
+      setLoadingMoreReplies(false);
+    }
+  }
+
+  async function handleToggleReplies() {
+    if (showReplies) {
+      setShowReplies(false);
+      return;
+    }
+    setShowReplies(true);
+    if (replies.length === 0 && !loadingReplies) {
+      await fetchReplies(true);
+    }
+  }
 
   async function handleLike() {
     const prev = liked;
@@ -42,13 +83,23 @@ export default function CommentItem({ comment, postId, onUpdated, depth = 0 }: C
       await addComment({ postId, parentCommentId: comment.id, content: text });
       setReplyText("");
       setShowReply(false);
-      onUpdated();
-    } catch { /* keep text */ }
+      setLocalReplyCount((n) => n + 1);
+      if (showReplies) {
+        await fetchReplies(true);
+      }
+    } catch { /* keep text so user can retry */ }
     finally { setSubmitting(false); }
   }
 
+  const outerClass = [
+    depth > 0 && depth <= MAX_INDENT_DEPTH ? "ml-10" : "",
+    depth > 0 ? "mt-2" : "",
+  ].filter(Boolean).join(" ");
+
+  const replyLabel = localReplyCount === 1 ? "1 reply" : `${localReplyCount} replies`;
+
   return (
-    <div className={depth > 0 ? "ml-10 mt-2" : ""}>
+    <div className={outerClass}>
       <div className="flex gap-2">
         <Avatar name={comment.authorName} size="sm" />
         <div className="flex-1 min-w-0">
@@ -98,6 +149,19 @@ export default function CommentItem({ comment, postId, onUpdated, depth = 0 }: C
             </span>
           </div>
 
+          {/* View / hide replies toggle */}
+          {localReplyCount > 0 && (
+            <div className="mt-1 pl-1">
+              <button
+                onClick={handleToggleReplies}
+                className="text-xs font-semibold transition-colors"
+                style={{ color: "var(--color5)" }}
+              >
+                {showReplies ? "Hide replies" : `View ${replyLabel}`}
+              </button>
+            </div>
+          )}
+
           {/* Reply input */}
           {showReply && (
             <div className="mt-2 flex items-center gap-2">
@@ -133,12 +197,50 @@ export default function CommentItem({ comment, postId, onUpdated, depth = 0 }: C
         </div>
       </div>
 
-      {/* Nested replies */}
-      {comment.replies?.length > 0 && (
+      {/* On-demand reply list */}
+      {showReplies && (
         <div className="mt-2 space-y-2">
-          {comment.replies.map((r) => (
-            <CommentItem key={r.id} comment={r} postId={postId} onUpdated={onUpdated} depth={depth + 1} />
+          {loadingReplies && (
+            <p className="text-xs pl-1" style={{ color: "var(--color7)" }}>
+              Loading replies…
+            </p>
+          )}
+
+          {repliesError && !loadingReplies && (
+            <button
+              onClick={() => fetchReplies(replies.length === 0)}
+              className="text-xs pl-1 text-left transition-colors"
+              style={{ color: "var(--color5)" }}
+            >
+              {repliesError}
+            </button>
+          )}
+
+          {replies.map((r) => (
+            <CommentItem
+              key={r.id}
+              comment={r}
+              postId={postId}
+              onUpdated={onUpdated}
+              depth={depth + 1}
+            />
           ))}
+
+          {repliesHasMore && !loadingMoreReplies && !repliesError && (
+            <button
+              onClick={() => fetchReplies(false)}
+              className="text-xs font-semibold pl-1 transition-colors"
+              style={{ color: "var(--color5)" }}
+            >
+              Load more replies
+            </button>
+          )}
+
+          {loadingMoreReplies && (
+            <p className="text-xs pl-1" style={{ color: "var(--color7)" }}>
+              Loading…
+            </p>
+          )}
         </div>
       )}
 
