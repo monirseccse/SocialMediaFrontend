@@ -170,6 +170,20 @@ export async function getComments(
   return res.data;
 }
 
+export async function getCommentReplies(
+  commentId: string,
+  cursor?: string,
+  limit = 10
+): Promise<CursorPagedResponse<CommentResponse>> {
+  const params: Record<string, string | number> = { Limit: limit };
+  if (cursor) params.Cursor = cursor;
+  const res = await client.get<CursorPagedResponse<CommentResponse>>(
+    `/api/Feed/comments/${commentId}/replies`,
+    { params }
+  );
+  return res.data;
+}
+
 export async function getLikers(
   targetId: string,
   type: LikeTargetType,
