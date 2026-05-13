@@ -86,15 +86,13 @@ export default function CommentItem({ comment, postId, onUpdated, depth = 0 }: C
                 {likeCount}
               </button>
             )}
-            {depth === 0 && (
-              <button
-                onClick={() => setShowReply((v) => !v)}
-                className="text-xs font-semibold transition-colors"
-                style={{ color: "var(--color7)" }}
-              >
-                Reply
-              </button>
-            )}
+            <button
+              onClick={() => setShowReply((v) => !v)}
+              className="text-xs font-semibold transition-colors"
+              style={{ color: "var(--color7)" }}
+            >
+              Reply
+            </button>
             <span className="text-xs" style={{ color: "var(--bg4)" }}>
               {timeAgo(comment.createdAt)}
             </span>
