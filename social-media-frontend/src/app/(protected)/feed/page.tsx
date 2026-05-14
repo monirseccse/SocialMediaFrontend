@@ -137,6 +137,7 @@ export default function FeedPage() {
   const cursorRef = useRef<string | undefined>(undefined);
   const hasMoreRef = useRef(false);
   const isFetchingRef = useRef(false);
+  const scrollRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) router.replace("/login");
@@ -177,20 +178,22 @@ export default function FeedPage() {
   }, [isAuthenticated, loadPosts]);
 
   // Runs once (loadPosts is stable); observer callback reads refs, no stale closures
-  useEffect(() => {
-    const el = sentinelRef.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && hasMoreRef.current && !isFetchingRef.current) {
-          loadPosts(false);
-        }
-      },
-      { rootMargin: "300px" }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [loadPosts]);
+useEffect(() => {
+  if (initialLoad) return;                     // ← wait for first fetch to finish
+  const el = sentinelRef.current;
+  const scrollEl = scrollRef.current;
+  if (!el || !scrollEl) return;
+  const obs = new IntersectionObserver(
+    ([entry]) => {
+      if (entry.isIntersecting && hasMoreRef.current && !isFetchingRef.current) {
+        loadPosts(false);
+      }
+    },
+    { root: scrollEl, rootMargin: "300px" }
+  );
+  obs.observe(el);
+  return () => obs.disconnect();
+}, [loadPosts, initialLoad]);                  // ← add initialLoad here
 
   function handlePostCreated() {
     cursorRef.current = undefined;
@@ -226,6 +229,7 @@ export default function FeedPage() {
 
             {/* Middle – feed */}
             <main
+             ref={scrollRef} 
               className="flex-1 h-full overflow-y-auto pb-10"
               style={{ scrollbarWidth: "none" }}
             >
